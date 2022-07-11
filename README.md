@@ -10,4 +10,3 @@ and he is the author of the book 'The Kalman Filter Algorithm Solving with Mathe
 ##
 This repository is an implementation of examples from his book.
 I followed his code as it is, but modified it a little to fit my coding style.
-Finally, an attempt was made to functionalize the code for reuse or reprogramming.
