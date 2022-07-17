@@ -1,5 +1,5 @@
 %
-% Reentry Trajectory Estimation Problem: Extended Kalman Filter Main Code
+% Reentry Trajectory Estimation Problem: Unscented Kalman Filter Main Code
 %
 
 clc; clear;
@@ -11,12 +11,13 @@ params.beta0 = 0.59783;
 params.mu = 3.986e5;
 params.xR = 6374; % the coordinate of a radar
 params.yR = 0;
+params.kappa = -2;
 
 % the sampling time
 dt = 0.05;
 
 % the process noise
-Qcf = diag([2.4065e-4 2.4065e-4 1e-5]); % Extended Kalman Filter
+Qcf = diag([2.4065e-4 2.4065e-4 1e-5]); % Unscented Kalman Filter
 Qd = Qcf * dt;
 
 Qcr = diag([2.4065e-4 2.4065e-4 0]);    % Real system
@@ -30,7 +31,7 @@ x_mean0 = [6500.4; 349.14; -1.8093; -6.7967; 0.6932];
 P0 = 1e-6 * diag([1 1 1 1 0]);
 x0 = x_mean0 + sqrt(P0) * randn(5,1); % the initial state variable sampling
 
-% the initial value of Extended Kalman-filter 
+% the initial value of Unscented Kalman-filter 
 xhat = [6500.4; 349.14; -1.8093; -6.7967; 0];
 Phat = diag([1e-6 1e-6 1e-6 1e-6 1]);
 
@@ -45,11 +46,11 @@ TIME = [];
 KK = {};
 
 %%
-% main roop on EKF
+% main roop on UKF
 for k = 1:4000 % simulation for 200sec / dt=0.05
     t = dt*k;
     % time update
-    [xbar, Pbar] = reentry_ekf_tu(xhat, Phat, Qd, dt, params);
+    [xbar, Pbar] = reentry_ukf_tu(xhat, Phat, Qd, dt, params);
     % the system model
     x = reentry_dyn(x0, Qr, dt, params, 'sy');
     % reset variables for the next time step
@@ -62,7 +63,7 @@ for k = 1:4000 % simulation for 200sec / dt=0.05
     z = reentry_meas(x, Rd, params, 'sy');
     
     % measurement update
-    [xhat, Phat, zhat, S, K] = reentry_ekf_mu(z, xbar, Pbar, Rd, params);
+    [xhat, Phat, zhat, S, K,Xi,W] = reentry_ukf_mu(z, xbar, Pbar, Rd, params);
 
     % save results
 %     X = [X; x'];
