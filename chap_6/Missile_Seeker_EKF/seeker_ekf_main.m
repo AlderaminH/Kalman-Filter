@@ -130,12 +130,14 @@ title('Trajectory')
 plot3(R(:,1)', R(:,2)', -R(:,3)', 'r')
 hold on
 plot3(R(:,4)', R(:,5)', -R(:,6)', 'b')
-scatter3(R(end,4), R(end,5), R(end,6), '*', 'g')
+scatter3(R(1,1), R(1,2), -R(1,3), 's', 'r')
+scatter3(R(1,4), R(1,5), -R(1,6), 's', 'b')
+scatter3(R(end,4), R(end,5), -R(end,6), '*', 'g')
 grid on
 hold off
 zlim([-5, 520])
 xlabel('east (m)'), ylabel('north (m)'), zlabel('altitude (m)')
-legend('target', 'missile', 'intercepted point')
+legend('target', 'missile', 'target starting point', 'missile starting point', 'intercepted point')
 
 %% state estimate error and std
 figure(2)
